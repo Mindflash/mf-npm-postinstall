@@ -37,7 +37,7 @@ for (let key in dependencies) {
       fs.accessSync(`${mfPath}/${key}`);
     }
     catch (exc) {
-      console.log(`\u2716 ${key} - is missing. Make sure you clone it first!`.bold.red);
+      console.error(`\u2716 ${key} - is missing. Make sure you clone it first!`.bold.red);
       continue;
     }
 
@@ -45,7 +45,8 @@ for (let key in dependencies) {
       execSync(`rm -r ${cwd}/node_modules/${key} && ln -s ${mfPath}/${key} ./node_modules`);
     }
     catch (exc) {
-      console.log(`\u2716 ${key} wasn't linked`.bold.red);
+      console.error(`\u2716 ${key} wasn't linked`.bold.red);
+      continue;
     }
 
     linkedDeps++;
@@ -60,4 +61,5 @@ if (linkedDeps === depsToLink) {
 else {
   console.log(`\n\n${linkedDeps} / ${depsToLink} linked\n`.red);
   console.log(fs.readFileSync(__dirname + '/ascii-failure.txt').toString().red);
+  process.exit(1);
 }

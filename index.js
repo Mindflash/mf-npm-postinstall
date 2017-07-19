@@ -7,7 +7,6 @@ const execSync = require('child_process').execSync;
 
 const plainPackage = fs.readFileSync('./package.json');
 const cwd = process.cwd();
-const parentDir = path.resolve(cwd, '..');
 
 let { dependencies, devDependencies } = JSON.parse(plainPackage);
 let linkedDeps = 0, depsToLink = 0;
@@ -19,7 +18,7 @@ if (process.env.NODE_ENV !== 'dev') {
   process.exit(0);
 }
 
-if (parentDir.split(path.sep).pop() === 'node_modules') {
+if (cwd.includes('/node_modules')) {
   console.log(`Running from inside node_modules. Skipping linking.`.magenta);
   process.exit(0);
 }

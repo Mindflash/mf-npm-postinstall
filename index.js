@@ -7,11 +7,22 @@ const execSync = require('child_process').execSync;
 
 const plainPackage = fs.readFileSync('./package.json');
 const cwd = process.cwd();
+const parentDir = path.resolve(cwd, '..');
 
 let { dependencies, devDependencies } = JSON.parse(plainPackage);
 let linkedDeps = 0, depsToLink = 0;
 
 Object.assign(dependencies, devDependencies);
+
+if (process.env.NODE_ENV !== 'dev') {
+  console.log(`NODE_ENV is not set to "dev". Skipping linking.`.magenta);
+  process.exit(0);
+}
+
+if (parentDir.split(path.sep).pop() === 'node_modules') {
+  console.log(`Running from inside node_modules. Skipping linking.`.magenta);
+  process.exit(0);
+}
 
 console.log(`Linking dependencies...\n\n`.underline.magenta);
 

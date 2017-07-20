@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const colors = require('colors');
 const execSync = require('child_process').execSync;
+const readlineSync = require('readline-sync');
 
 const plainPackage = fs.readFileSync('./package.json');
 const cwd = process.cwd();
@@ -41,26 +42,45 @@ for (let key in dependencies) {
   if (dependencies[key].includes("github.com:Mindflash")) {
     depsToLink++;
 
+    const depName = dependencies[key].match(/(.*)Mindflash\/(.*)\.git/)[2];
     const mfPath = path.resolve(`${cwd}/..`);
 
     try {
-      fs.accessSync(`${mfPath}/${key}`);
+      fs.accessSync(`${mfPath}/${depName}`);
     }
     catch (exc) {
-      console.error(`\u2716 ${key} - is missing. Make sure you clone it first!`.bold.red);
-      continue;
+      const answer = readlineSync.question(`${depName} is missing, do you want me to clone it for you? (Y/n):`)
+
+      if (answer === 'n') {
+        console.error(`\u2716 ${depName} - is missing. Make sure you clone it first!`.bold.red);
+        continue;
+      }
+
+      let depUrl = dependencies[key].replace('git+ssh://', '');
+      let depBranch = null;
+
+      if (depUrl.includes('#')) {
+        depBranch = depUrl.split('#')[1];
+        depUrl = depUrl.split('#')[0];
+      }
+
+      execSync(`git clone ${depUrl} ../${depName}`);
+
+      if (depBranch) {
+        execSync(`cd ../${depName} && git checkout ${depBranch}`);
+      }
     }
 
     try {
-      execSync(`rm -r ${cwd}/node_modules/${key} && ln -s ${mfPath}/${key} ./node_modules`);
+      execSync(`rm -r ${cwd}/node_modules/${depName} && ln -s ${mfPath}/${depName} ./node_modules`);
     }
     catch (exc) {
-      console.error(`\u2716 ${key} wasn't linked`.bold.red);
+      console.error(`\u2716 ${depName} wasn't linked`.bold.red);
       continue;
     }
 
     linkedDeps++;
-    console.log(`\u2714 ${key}`.green);
+    console.log(`\u2714 ${depName}`.green);
   }
 }
 

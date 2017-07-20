@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Mindflash/mf-npm-postinstall#readme",
   "dependencies": {
-    "colors": "^1.1.2"
+    "colors": "^1.1.2",
+    "readline-sync": "^1.4.7"
   }
 }

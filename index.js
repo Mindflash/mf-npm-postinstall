@@ -14,8 +14,8 @@ let linkedDeps = 0, depsToLink = 0;
 
 Object.assign(dependencies, devDependencies);
 
-if (process.env.NODE_ENV !== 'dev') {
-  console.log(`NODE_ENV is not set to "dev". Skipping linking.`.magenta);
+if (process.env.MF_ENV !== 'dev') {
+  console.log(`MF_ENV is not set to "dev". Skipping linking.`.magenta);
   process.exit(0);
 }
 

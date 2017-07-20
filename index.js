@@ -42,7 +42,8 @@ for (let key in dependencies) {
   if (dependencies[key].includes("github.com:Mindflash")) {
     depsToLink++;
 
-    const depName = dependencies[key].match(/(.*)Mindflash\/(.*)\.git/)[2];
+    const depGitName = dependencies[key].match(/(.*)Mindflash\/(.*)\.git/)[2];
+    const depName = key;
     const mfPath = path.resolve(`${cwd}/..`);
 
     try {
@@ -72,7 +73,7 @@ for (let key in dependencies) {
     }
 
     try {
-      execSync(`rm -r ${cwd}/node_modules/${depName} && ln -s ${mfPath}/${depName} ./node_modules`);
+      execSync(`rm -r ${cwd}/node_modules/${depGitName} && ln -s ${mfPath}/${depGitName} ./node_modules`);
     }
     catch (exc) {
       console.error(`\u2716 ${depName} wasn't linked`.bold.red);

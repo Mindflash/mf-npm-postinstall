@@ -9,7 +9,11 @@ const readlineSync = require('readline-sync');
 const plainPackage = fs.readFileSync('./package.json');
 const cwd = process.cwd();
 
-let { dependencies, devDependencies } = JSON.parse(plainPackage);
+// let { dependencies, devDependencies } = JSON.parse(plainPackage);
+let tmp = JSON.parse(plainPackage);
+let dependencies = tmp.dependencies;
+let devDependencies = tmp.devDependencies;
+
 let linkedDeps = 0, depsToLink = 0;
 
 Object.assign(dependencies, devDependencies);

@@ -1,6 +1,6 @@
 {
   "name": "mf-npm-postinstall",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A postinstall script which runs after installing dependencies, and creates symlinks for all mf-* deps",
   "main": "index.js",
   "scripts": {

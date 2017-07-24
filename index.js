@@ -1,5 +1,10 @@
 'use strict';
 
+if (process.env.MF_ENV !== 'dev') {
+  console.log(`MF_ENV is not set to "dev". Skipping linking.`);
+  process.exit(0);
+}
+
 const fs = require('fs');
 const path = require('path');
 const colors = require('colors');
@@ -17,11 +22,6 @@ let devDependencies = tmp.devDependencies;
 let linkedDeps = 0, depsToLink = 0;
 
 Object.assign(dependencies, devDependencies);
-
-if (process.env.MF_ENV !== 'dev') {
-  console.log(`MF_ENV is not set to "dev". Skipping linking.`.magenta);
-  process.exit(0);
-}
 
 if (cwd.includes('/node_modules')) {
   console.log(`Running from inside node_modules. Skipping linking.`.magenta);
